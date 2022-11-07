@@ -24,13 +24,13 @@ if __name__ == "__main__":
     Cresta_amp_seno = math.sqrt(2)
     Cresta_speaker_ruido = 1/0.5
 
-    sens_amp = 1.228
-    P_amp = 200
-    R_amp = 8
 
-    P_speakers = 100
-    R_speakers = 8
+    sens_amp = float(input('please enter you amplifier sensitivity (V)'))
+    P_amp = float(input('Please enter your amplifier power'))
+    R_amp = float(input('Please eneter your amplifier impedance'))
 
+    P_speakers = float(input('Please enter your speaker RMS power consumption'))
+    R_speakers = float(input('please enter your speaker impedance'))
 
     protect = 50
 
@@ -54,34 +54,45 @@ if __name__ == "__main__":
     Ipeak_speaker = Irms_speaker*Cresta_speaker_ruido
     VPeak_speaker = Vrms_speaker*Cresta_speaker_ruido
 
-    print(Ipeak_speaker, VPeak_speaker)
-    print(Ipeak_amp, Vpeak_amp)
-
 
     # una vez hemos obtenido las corrientes y tensiones maximas y rms que se van a producir en el amp y que se pueden
     # soportar por parte de el altavoz, hemos de emplear el factorX de la etapa para asegurarnos que el voltaje y
     # corriente RMS desarollador pos la etapa no exceden a lo que el cono puede aceptar
-
-
     Xfactor = Vrms_amp/sens_amp
-    print('X factor = ', Xfactor)
+
 
     # Copn este factor de multiplicacion, vamos a calcular el voltaje maximo a la entrada para que la salida no exceda
     # la tension que puede admitir el cono.
 
-    Vin_max = Vrms_speaker/Xfactor
+    VInMax_RMS = Vrms_speaker / Xfactor
 
 
     # UNa vez tenemos la tension maxima de entrada expresada en voltios, la pasamos a dbu
 
-    DBin_max=DBConversor.V2DBU(Vin_max)
+    dBuInMax_RMS=DBConversor.V2DBU(VInMax_RMS)
 
-    print('max dbu in:', DBin_max)
+
 
 
     # calculado el nivel maximo de entrada para no cargarnos el altavoz, hemos de calcular el threshold del limitador
     # primro definimos un factor de proteccion entra 0 y 1
     protect = 0.5
-    Vumbral  =(Vrms_speaker/Xfactor)*(1-protect)
-    DBUUmbral = DBConversor.V2DBU(Vumbral)
-    print('dbUmbral = ', DBUUmbral)
+    VUmbral_RMS  = (Vrms_speaker / Xfactor) * (1 - protect)
+    LimiterTH_RMS = DBConversor.V2DBU(VUmbral_RMS)
+    print('RMS limiter Threshold = ', LimiterTH_RMS)
+
+
+    '--------------'
+
+    VInMax_Peak = VPeak_speaker/Xfactor
+    # UNa vez tenemos la tension maxima de entrada expresada en voltios, la pasamos a dbu
+
+    dBuInMax_Peak = DBConversor.V2DBU(VInMax_Peak)
+
+    # calculado el nivel maximo de entrada para no cargarnos el altavoz, hemos de calcular el threshold del limitador
+    # primro definimos un factor de proteccion entra 0 y 1
+
+    VUmbral_Peak = (VPeak_speaker/Xfactor)*(1-(protect/2))
+    LimiterTH_Peak = DBConversor.V2DBU(VUmbral_Peak)
+    print('Peak limiter Threshold = ', LimiterTH_Peak)
+
