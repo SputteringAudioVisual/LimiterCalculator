@@ -1,16 +1,29 @@
-# This is a sample Python script.
-
-# Press Mayús+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+import math
+from Utils.UnitConversor import DBConversor
+from amplifiers.AmplifierBase import amplifierBase
+from Speakers.SpeakerBase import speakerBase
+from LimiterAPI import LimiterAPI
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+amp = amplifierBase()
+amp.setPower(200)
+amp.setImpedance(8)
+amp.CalculateRMSPeakValues()
+amp.setVsens(1.22)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+
+driver = speakerBase()
+driver.setImpedance(8)
+driver.setPower(100)
+driver.CalculateRMSPeakValues()
+
+limiter = LimiterAPI()
+
+limiter.setAmp(amp)
+limiter.setDriver(driver)
+
+
+limiter.CalculateRMSLimiter()
+
+limiter.calculatePeakLimiter()
