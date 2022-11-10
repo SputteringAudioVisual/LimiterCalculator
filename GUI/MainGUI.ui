@@ -111,7 +111,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Power consumption (RMS)</string>
+              <string>Power consumption (W RMS)</string>
              </property>
             </widget>
            </item>
@@ -140,7 +140,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Amp impedance</string>
+              <string>Amp impedance (Ohm)</string>
              </property>
             </widget>
            </item>
@@ -175,7 +175,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Amp power (RMS for the specific impedance)</string>
+              <string>Amp power (W RMS for the specific impedance)</string>
              </property>
             </widget>
            </item>
@@ -186,27 +186,12 @@
                <string>Voltage</string>
               </property>
              </item>
-             <item>
-              <property name="text">
-               <string>dBu</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>X factor</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Gain</string>
-              </property>
-             </item>
             </widget>
            </item>
            <item row="6" column="0">
             <widget class="QLabel" name="ProtectionLabel">
              <property name="text">
-              <string>Protection</string>
+              <string>Protection (%)</string>
              </property>
             </widget>
            </item>
@@ -214,27 +199,27 @@
             <widget class="QComboBox" name="ProtectionCombo">
              <item>
               <property name="text">
-               <string>0%</string>
+               <string>0</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>25%</string>
+               <string>25</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>50%</string>
+               <string>50</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>75%</string>
+               <string>75</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>90%</string>
+               <string>90</string>
               </property>
              </item>
             </widget>
@@ -283,11 +268,6 @@
          </item>
          <item row="1" column="1">
           <widget class="QComboBox" name="RMSThresholdUnitCombo">
-           <item>
-            <property name="text">
-             <string>Units</string>
-            </property>
-           </item>
            <item>
             <property name="text">
              <string>dBu</string>
@@ -343,11 +323,6 @@
          </item>
          <item row="3" column="1">
           <widget class="QComboBox" name="PeakThresholdUnitCombo">
-           <item>
-            <property name="text">
-             <string>Units</string>
-            </property>
-           </item>
            <item>
             <property name="text">
              <string>dBu</string>
