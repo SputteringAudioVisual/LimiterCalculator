@@ -1,7 +1,7 @@
 import math
 class DBConversor:
     dBu_ref = 0.7746    # voltios
-
+    dBv_ref = 1
     def __init__(self):
         pass
 
@@ -12,3 +12,4 @@ class DBConversor:
     @classmethod
     def V2DBU(cls, volts):
         return 20*math.log10(volts/cls.dBu_ref)
+

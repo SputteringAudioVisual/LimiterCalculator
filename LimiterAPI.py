@@ -8,6 +8,7 @@ class LimiterAPI:
         self.amp = None
         self.driver = None
         self.protect = 0
+        self.HPF = None
 
 
     def setAmp(self, amp):
@@ -16,11 +17,19 @@ class LimiterAPI:
     def setDriver(self, driver):
         self.driver = driver
 
+    def setHPF(self, hpf_value):
+        self.HPF = hpf_value
+
     def CalculateRMSLimiter(self):
         if self.driver and self.amp:
             self.RMS_VoltageTH = (self.driver.V_RMS / self.amp.Xfactor) * (1 - (self.protect/100))
             self.RMS_dBuTH = DBConversor.V2DBU(self.RMS_VoltageTH)
             print('RMS limiter Threshold = ', self.RMS_dBuTH)
+
+
+    def calculateTimeParameters(self):
+        self.attack = 1000/self.HPF
+        self.release = 15*self.attack
 
 
     def calculatePeakLimiter(self):
