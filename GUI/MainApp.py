@@ -29,11 +29,6 @@ class LimiterApp(QMainWindow):
         self.AttackValue.setText(None)
         self.ReleaseValue.setText(None)
 
-        self.SpeakerImpedanceValue.setText(str(8))
-        self.SpeakerPowerValue.setText(str(100))
-        self.AmpImpedanceValue.setText(str(8))
-        self.AmpPowerValue.setText(str(200))
-        self.SensitivityValue.setText(str(1.2))
         self.RMSThresholdValue.setText(None)
         self.PeakThresholdValue.setText(None)
         self.AttackValue.setText(None)
