@@ -1,6 +1,8 @@
 from PyQt5.QtWidgets import QMainWindow, QGridLayout, QCheckBox, QFileDialog, QApplication
 from PyQt5.uic import loadUi
 import sys
+import os
+from pathlib import Path
 from PyQt5 import QtCore
 from amplifiers.AmplifierBase import amplifierBase
 from Speakers.SpeakerBase import speakerBase
@@ -11,7 +13,8 @@ class LimiterApp(QMainWindow):
     def __init__(self):
         super(LimiterApp, self).__init__()
         QMainWindow.__init__(self)
-        loadUi(r'D:\Repositorios\LimiterCalculator\GUI\MainGUI.ui', self)
+        print(os.getcwd())
+        loadUi(os.getcwd() / Path('GUI/MainGUI.ui'), self)
         self.setEnabled(True)
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.show()
