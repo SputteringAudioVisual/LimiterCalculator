@@ -1,2 +1,0 @@
-pyinstaller 'main.py' --onefile --icon='santos.ico'
-pyinstaller 'main.py' --windowed --icon='iconSanto.ico' app.py

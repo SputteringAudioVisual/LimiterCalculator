@@ -43,6 +43,8 @@ class LimiterApp(QMainWindow):
                           self.SensitivityValue.text(), self.HPFValue.text()]
 
 
+
+
         self.RMSThresholdValue.setEnabled(False)
         self.PeakThresholdValue.setEnabled(False)
         self.AttackValue.setEnabled(False)
