@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import numpy as np
 
-filePath = Path(os.getcwd()).parent.parent / Path(r'Utils/1KHz_192KHz_24bit_60sec_0db.wav')
+filePath = Path(os.getcwd()).parent.parent / Path(r'Utils/audiocheck.net_pinknoise.wav')
 data = wavfile.read(filePath)
 audio = data[1]
 
