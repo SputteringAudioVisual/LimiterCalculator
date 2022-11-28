@@ -6,15 +6,16 @@ import matplotlib.pyplot as plt
 from scipy.fftpack import fft
 import time
 from tkinter import TclError
+from scipy.ndimage.filters import gaussian_filter1d
 
 # to display in separate Tk window
 
 
 # constants
-CHUNK = 1024 * 2             # samples per frame
+CHUNK = 1024  # samples per frame
 FORMAT = pyaudio.paInt16     # audio format (bytes per sample?)
 CHANNELS = 1                 # single channel for microphone
-RATE = 44100
+RATE = 48000
 
 # create matplotlib figure and axes
 fig, (ax1, ax2) = plt.subplots(2, figsize=(15, 7))
@@ -63,23 +64,19 @@ while True:
 
     # binary data
     data = stream.read(CHUNK)
+    audio_data = np.frombuffer(data, dtype=np.uint16)
+    fft_data = np.fft.rfft(audio_data)  # rfft removes the mirrored part that fft generates
+    fft_freq = np.fft.rfftfreq(len(audio_data), d=1 / RATE)  # rfftfreq needs the signal data, not the fft data
+    ysmoothed = gaussian_filter1d(np.absolute(fft_data), sigma=4)
 
-    # convert data to integers, make np array, then offset it by 127
-    data_int = struct.unpack(str(2 * CHUNK) + 'B', data)
 
-    # create np array and offset by 128
-    data_np = np.array(data_int, dtype='b')[::2] + 128
 
-    line.set_ydata(data_np)
-
-    # compute FFT and update line
-    yf = fft(data_int)
-    line_fft.set_ydata(np.abs(yf[0:CHUNK]) / (128 * CHUNK))
+    line_fft.set_ydata(ysmoothed)
 
     # update figure canvas
     try:
         fig.canvas.draw()
-        plt.pause(0.05)
+
         fig.canvas.flush_events()
 
         frame_count += 1
