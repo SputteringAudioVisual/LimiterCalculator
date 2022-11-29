@@ -1,0 +1,15 @@
+{
+  "Brand": "",
+  "Model": "",
+  "VSens": "",
+  "dbuSens": "",
+  "Xfactor": "",
+  "Power": {
+    "8ohm_st": "",
+    "4ohm_st": "",
+    "2ohm_st": "",
+    "8ohm_br": "",
+    "4ohm_br": "",
+    "2ohm_br": ""
+  }
+}
