@@ -1,0 +1,15 @@
+{
+  "Brand": "Tamp",
+  "Model": "TSA4000",
+  "VSens": "1",
+  "dbuSens": "",
+  "Xfactor": "",
+  "Power": {
+    "8ohm_st": "1000",
+    "4ohm_st": "1500",
+    "2ohm_st": "",
+    "8ohm_br": "2865",
+    "4ohm_br": "",
+    "2ohm_br": ""
+  }
+}
