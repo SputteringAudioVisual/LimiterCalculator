@@ -6,7 +6,8 @@ from pathlib import Path
 from PyQt5 import QtCore
 from amplifiers.AmplifierBase import amplifierBase
 from Speakers.SpeakerBase import speakerBase
-from LimiterAPI import LimiterAPI
+from src.API.LimiterAPI import LimiterAPI
+import json
 
 
 class LimiterApp(QMainWindow):
@@ -14,7 +15,7 @@ class LimiterApp(QMainWindow):
         super(LimiterApp, self).__init__()
         QMainWindow.__init__(self)
         print(os.getcwd())
-        loadUi(os.getcwd() / Path('GUI/MainGUI.ui'), self)
+        loadUi(Path(os.getcwd()).parent / Path('GUI/MainGUI/MainGUI_new.ui'), self)
         self.setEnabled(True)
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.show()
@@ -42,6 +43,7 @@ class LimiterApp(QMainWindow):
                           self.AmpImpedanceValue.text(), self.AmpPowerValue.text(),
                           self.SensitivityValue.text(), self.HPFValue.text()]
 
+        self.outputTable.resizeColumnsToContents()
 
 
 
@@ -51,10 +53,17 @@ class LimiterApp(QMainWindow):
         self.ReleaseValue.setEnabled(False)
         self.SpeakerImpedanceLabel.setEnabled(True)
         self.SpeakerPowerLabel.setEnabled(True)
+        self.loadDriverButton.setEnabled(True)
+        self.loadAmpButton.setEnabled(True)
+        self.OperationMode.hide()
+        self.AmpImpedanceComBoBox.hide()
 
         self.ProtectionCombo.currentIndexChanged.connect(self.keyPressEvent)
         self.RMSThresholdUnitCombo.currentIndexChanged.connect(self.keyPressEvent)
         self.PeakThresholdUnitCombo.currentIndexChanged.connect(self.keyPressEvent)
+
+        self.loadAmpButton.clicked.connect(self.openAmpDialog)
+        self.loadDriverButton.clicked.connect(self.openDriverDialog)
 
         #inicializamos la API
         self.API = LimiterAPI()
@@ -62,15 +71,13 @@ class LimiterApp(QMainWindow):
         # Creamos variables vacias para evitar crashes
         self.Peak_TH =None
         self.RMS_TH =None
-
+        self.driverData = None
         self.allNumericValues = False
 
 
 
 
     def keyPressEvent(self, event):
-
-
         NewValueList = [self.SpeakerImpedanceValue.text(), self.SpeakerPowerValue.text(), self.AmpImpedanceValue.text(),
                      self.AmpPowerValue.text(), self.SensitivityValue.text(), self.HPFValue.text()]
 
@@ -88,14 +95,9 @@ class LimiterApp(QMainWindow):
                      self.AmpPowerValue.text(), self.SensitivityValue.text(), self.HPFValue.text()]
 
 
-
-
-
         driverValues = [self.SpeakerImpedanceValue.text(), self.SpeakerPowerValue.text()]
 
         ampValues = [ self.AmpImpedanceValue.text(), self.AmpPowerValue.text(), self.SensitivityValue.text(), self.HPFValue.text()]
-
-
 
         if self.allNumericValues:
             self.API.protect = float(self.ProtectionCombo.itemText(self.ProtectionCombo.currentIndex()))
@@ -116,8 +118,6 @@ class LimiterApp(QMainWindow):
             if '' not in set(self.ValueList):
                 self.CalculateLimiters()
                 self.updateGUIValues()
-
-
             else:
                 pass
         else:
@@ -142,15 +142,12 @@ class LimiterApp(QMainWindow):
             self.amp.setDBUSens(float(amp_values[2]))
         if self.SensitivityUnitCombo.itemText(self.SensitivityUnitCombo.currentIndex()) == 'X Factor':
             self.amp.setXfactor(float(amp_values[2]))
-
         self.API.setAmp(self.amp)
-
 
     def CalculateLimiters(self):
         self.API.calculatePeakLimiter()
         self.API.CalculateRMSLimiter()
         self.API.calculateTimeParameters()
-
 
     def updateGUIValues(self):
         self.AttackValue.setText(str(self.API.attack))
@@ -179,6 +176,58 @@ class LimiterApp(QMainWindow):
         self.PeakThresholdValue.setReadOnly(True)
         self.AttackValue.setReadOnly(True)
         self.ReleaseValue.setReadOnly(True)
+
+    def openAmpDialog(self):
+        """!
+        This method open a dialog to load a .pkl file on the GUI.
+        """
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        driverDB = str(Path(os.getcwd()).parent) + r'\dataBase\amplifierDataBase'
+
+        self.fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", directory = driverDB,
+                                                       initialFilter = "All Files (*);;amp file (*.json)", options=options)
+        if self.fileName:
+
+            with open(self.fileName, 'r') as f:
+                self.AmpData = json.load(f)
+                self.AmpImpedanceValue.setEnabled(False)
+                self.AmpImpedanceValue.hide()
+                self.AmpPowerValue.setEnabled(False)
+                self.SensitivityValue.setEnabled(False)
+                self.AmplificationInfoLabel.setText('AmpData Data:  ' + self.AmpData['Brand'] + '-' + self.AmpData['Model'])
+                self.OperationMode.show()
+                self.AmpImpedanceComBoBox.show()
+            return True
+        else:
+            return False
+
+    def openDriverDialog(self):
+        """!
+        This method open a dialog to load a .pkl file on the GUI.
+        """
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        driverDB = str(Path(os.getcwd()).parent) + r'\dataBase\driverDataBase'
+
+        self.fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", directory = driverDB,
+                                                       initialFilter = "All Files (*);;driver file (*.json)", options=options)
+        if self.fileName:
+
+            with open(self.fileName, 'r') as f:
+                self.DriverData = json.load(f)
+                self.driver.setPower(self.DriverData['Power'])
+                self.SpeakerPowerValue.setText(self.driver.power)
+                self.SpeakerPowerValue.setEnabled(False)
+
+                self.driver.setImpedance(self.DriverData['Impedance'])
+                self.SpeakerImpedanceValue.setText(self.driver.impedance)
+                self.SpeakerImpedanceValue.setEnabled(False)
+
+                self.SpeakerInfoLabel.setText('Driver Data:  ' + self.DriverData['Brand'] + '-' + self.DriverData['Model'])
+            return True
+        else:
+            return False
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
