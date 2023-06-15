@@ -1,15 +1,20 @@
 {
   "Brand": "Tamp",
   "Model": "TSA4000",
-  "VSens": "1",
-  "dbuSens": "",
-  "Xfactor": "",
-  "Power": {
-    "8ohm_st": "1000",
-    "4ohm_st": "1500",
-    "2ohm_st": "",
-    "8ohm_br": "2865",
-    "4ohm_br": "",
-    "2ohm_br": ""
+  "Stereo": {
+    "Impedance": [2,4,8],
+    "Power": [2500, 1123, 545],
+    "OutConections":[" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Bridge": {
+    "Impedance": [4,8],
+    "Power": [4455, 2748],
+    "OutConections":[" 1+ / · ", " · / 1- "]
+  },
+  "Sensitivity": {
+    "V sens": 1,
+    "dBu sens": 2,
+    "X Factor": 3
   }
+
 }

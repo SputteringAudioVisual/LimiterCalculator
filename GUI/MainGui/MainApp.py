@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QGridLayout, QCheckBox, QFileDialog, QApplication
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QCheckBox, QFileDialog, QApplication
 from PyQt5.uic import loadUi
 import sys
 import os
@@ -64,6 +64,9 @@ class LimiterApp(QMainWindow):
 
         self.loadAmpButton.clicked.connect(self.openAmpDialog)
         self.loadDriverButton.clicked.connect(self.openDriverDialog)
+        self.AmpImpedanceComBoBox.currentIndexChanged.connect(self.keyPressEvent)
+        self.OperationMode.currentIndexChanged.connect(self.changeAmpConfiguration)
+        self.SensitivityUnitCombo.currentIndexChanged.connect(self.keyPressEvent)
 
         #inicializamos la API
         self.API = LimiterAPI()
@@ -78,8 +81,15 @@ class LimiterApp(QMainWindow):
 
 
     def keyPressEvent(self, event):
+        if self.AmpImpedanceComBoBox:
+            self.AmpImpedanceValue.setText(self.AmpImpedanceComBoBox.currentText())
+            self.AmpPowerValue.setText(str(self.AmpData[self.OperationMode.currentText()]['Power'][self.AmpImpedanceComBoBox.currentIndex()]))
+            self.SensitivityValue.setText(str(self.AmpData['Sensitivity'][self.SensitivityUnitCombo.currentText()]))
+
         NewValueList = [self.SpeakerImpedanceValue.text(), self.SpeakerPowerValue.text(), self.AmpImpedanceValue.text(),
                      self.AmpPowerValue.text(), self.SensitivityValue.text(), self.HPFValue.text()]
+
+
 
 
         for value, newValue in zip(self.ValueList, NewValueList) :
@@ -89,7 +99,6 @@ class LimiterApp(QMainWindow):
                     self.allNumericValues =True
                 except:
                     self.allNumericValues = False
-                    print('Please only numerical values')
 
         self.ValueList = [self.SpeakerImpedanceValue.text(), self.SpeakerPowerValue.text(), self.AmpImpedanceValue.text(),
                      self.AmpPowerValue.text(), self.SensitivityValue.text(), self.HPFValue.text()]
@@ -121,15 +130,15 @@ class LimiterApp(QMainWindow):
             else:
                 pass
         else:
-            pass
+            QMessageBox.warning(self, 'WARNING!',
+                                    'Please use only numerical values.',
+                                    QMessageBox.Ok)
 
     def updateDriver(self, driver_values):
         self.driver.setImpedance(float(driver_values[0]))
         self.driver.setPower(float(driver_values[1]))
         self.driver.CalculateRMSPeakValues()
         self.API.setDriver(self.driver)
-
-
 
     def updateAmp(self, amp_values):
         self.amp.setImpedance(float(amp_values[0]))
@@ -149,21 +158,27 @@ class LimiterApp(QMainWindow):
         self.API.CalculateRMSLimiter()
         self.API.calculateTimeParameters()
 
+    def changeAmpConfiguration(self):
+        impedanceList = [str(impedance) for impedance in self.AmpData[self.OperationMode.currentText()]['Impedance']]
+        self.AmpImpedanceComBoBox.clear()
+        self.AmpImpedanceComBoBox.addItems(impedanceList)
+
+
     def updateGUIValues(self):
         self.AttackValue.setText(str(self.API.attack))
         self.ReleaseValue.setText(str(self.API.release))
 
         if self.RMSThresholdUnitCombo.itemText(self.RMSThresholdUnitCombo.currentIndex())=='dBu':
-            self.RMSThresholdValue.setText(str(self.API.RMS_dBuTH))
+            self.RMSThresholdValue.setText(str(round(self.API.RMS_dBuTH, 2)))
         elif self.RMSThresholdUnitCombo.itemText(self.RMSThresholdUnitCombo.currentIndex()).split()[0] == 'dBfs':
-            self.RMSThresholdValue.setText(str(self.API.RMS_dBuTH-22))
+            self.RMSThresholdValue.setText(str(round(self.API.RMS_dBuTH-22 ,2)))
         else:
             self.RMSThresholdValue.setText('not implemented Yet')
 
         if self.PeakThresholdUnitCombo.itemText(self.PeakThresholdUnitCombo.currentIndex()) == 'dBu':
-            self.PeakThresholdValue.setText(str(self.API.Peak_dBuTH))
+            self.PeakThresholdValue.setText(str(round(self.API.Peak_dBuTH, 2)))
         elif self.PeakThresholdUnitCombo.itemText(self.PeakThresholdUnitCombo.currentIndex()).split()[0] == 'dBfs':
-            self.PeakThresholdValue.setText(str(self.API.Peak_dBuTH-22))
+            self.PeakThresholdValue.setText(str(round(self.API.Peak_dBuTH-22, 2)))
         else:
             self.PeakThresholdValue.setText('not implemented Yet')
 
@@ -176,6 +191,7 @@ class LimiterApp(QMainWindow):
         self.PeakThresholdValue.setReadOnly(True)
         self.AttackValue.setReadOnly(True)
         self.ReleaseValue.setReadOnly(True)
+
 
     def openAmpDialog(self):
         """!
@@ -190,14 +206,22 @@ class LimiterApp(QMainWindow):
         if self.fileName:
 
             with open(self.fileName, 'r') as f:
+                self.AmpImpedanceComBoBox.show()
+                self.OperationMode.show()
+
                 self.AmpData = json.load(f)
                 self.AmpImpedanceValue.setEnabled(False)
                 self.AmpImpedanceValue.hide()
                 self.AmpPowerValue.setEnabled(False)
                 self.SensitivityValue.setEnabled(False)
                 self.AmplificationInfoLabel.setText('AmpData Data:  ' + self.AmpData['Brand'] + '-' + self.AmpData['Model'])
-                self.OperationMode.show()
-                self.AmpImpedanceComBoBox.show()
+
+                # show combo box with loaded data
+                impedanceList = [str(impedance) for impedance in self.AmpData[self.OperationMode.currentText()]['Impedance']]
+                self.AmpImpedanceComBoBox.clear()
+                self.AmpImpedanceComBoBox.addItems(impedanceList)
+
+
             return True
         else:
             return False
@@ -209,11 +233,9 @@ class LimiterApp(QMainWindow):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         driverDB = str(Path(os.getcwd()).parent) + r'\dataBase\driverDataBase'
-
         self.fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", directory = driverDB,
                                                        initialFilter = "All Files (*);;driver file (*.json)", options=options)
         if self.fileName:
-
             with open(self.fileName, 'r') as f:
                 self.DriverData = json.load(f)
                 self.driver.setPower(self.DriverData['Power'])
@@ -228,6 +250,11 @@ class LimiterApp(QMainWindow):
             return True
         else:
             return False
+
+    def storeParams(self):
+        pass
+    def resetParams(self):
+        pass
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
