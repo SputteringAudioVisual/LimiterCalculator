@@ -14,7 +14,7 @@
   "Sensitivity": {
     "V sens": 1,
     "dBu sens": 2,
-    "X Factor": 3
+    "X Factor": false
   }
 
 }

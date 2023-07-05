@@ -9,6 +9,7 @@ class LimiterAPI:
         self.driver = None
         self.protect = 0
         self.HPF = None
+        self.LPF = None
 
 
     def setAmp(self, amp):
@@ -19,6 +20,9 @@ class LimiterAPI:
 
     def setHPF(self, hpf_value):
         self.HPF = hpf_value
+
+    def setLPF(self, lpf_value):
+        self.LPF = lpf_value
 
     def CalculateRMSLimiter(self):
         if self.driver and self.amp:

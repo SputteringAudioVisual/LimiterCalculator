@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QMessageBox, QCheckBox, QFileDialog, QApplication
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QCheckBox, QFileDialog, QApplication, QTableWidgetItem
 from PyQt5.uic import loadUi
 import sys
 import os
@@ -15,7 +15,7 @@ class LimiterApp(QMainWindow):
         super(LimiterApp, self).__init__()
         QMainWindow.__init__(self)
         print(os.getcwd())
-        loadUi(Path(os.getcwd()).parent / Path('GUI/MainGUI/MainGUI_new.ui'), self)
+        loadUi(Path(os.getcwd()).parent / Path('GUI/MainGUI/MainGUI.ui'), self)
         self.setEnabled(True)
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.show()
@@ -55,6 +55,8 @@ class LimiterApp(QMainWindow):
         self.SpeakerPowerLabel.setEnabled(True)
         self.loadDriverButton.setEnabled(True)
         self.loadAmpButton.setEnabled(True)
+        self.StoreParamsButton.setEnabled(False)
+        self.outputTable.setAlternatingRowColors(True)
         self.OperationMode.hide()
         self.AmpImpedanceComBoBox.hide()
 
@@ -67,27 +69,31 @@ class LimiterApp(QMainWindow):
         self.AmpImpedanceComBoBox.currentIndexChanged.connect(self.keyPressEvent)
         self.OperationMode.currentIndexChanged.connect(self.changeAmpConfiguration)
         self.SensitivityUnitCombo.currentIndexChanged.connect(self.keyPressEvent)
+        self.DeleteInputDataButton.clicked.connect(self.resetParams)
+        self.StoreParamsButton.clicked.connect(self.storeParams)
 
         #inicializamos la API
         self.API = LimiterAPI()
 
         # Creamos variables vacias para evitar crashes
+        self.driveType = 'Custom'
+        self.ampType = 'Custom'
         self.Peak_TH =None
         self.RMS_TH =None
         self.driverData = None
         self.allNumericValues = False
-
+        self.row = 0
 
 
 
     def keyPressEvent(self, event):
-        if self.AmpImpedanceComBoBox:
+        if not self.AmpImpedanceComBoBox.isHidden():
             self.AmpImpedanceValue.setText(self.AmpImpedanceComBoBox.currentText())
             self.AmpPowerValue.setText(str(self.AmpData[self.OperationMode.currentText()]['Power'][self.AmpImpedanceComBoBox.currentIndex()]))
             self.SensitivityValue.setText(str(self.AmpData['Sensitivity'][self.SensitivityUnitCombo.currentText()]))
 
         NewValueList = [self.SpeakerImpedanceValue.text(), self.SpeakerPowerValue.text(), self.AmpImpedanceValue.text(),
-                     self.AmpPowerValue.text(), self.SensitivityValue.text(), self.HPFValue.text()]
+                     self.AmpPowerValue.text(), self.SensitivityValue.text(), self.HPFValue.text(), self.LPFValue.text()]
 
 
 
@@ -101,18 +107,21 @@ class LimiterApp(QMainWindow):
                     self.allNumericValues = False
 
         self.ValueList = [self.SpeakerImpedanceValue.text(), self.SpeakerPowerValue.text(), self.AmpImpedanceValue.text(),
-                     self.AmpPowerValue.text(), self.SensitivityValue.text(), self.HPFValue.text()]
+                     self.AmpPowerValue.text(), self.SensitivityValue.text(), self.HPFValue.text(), self.LPFValue.text()]
 
 
         driverValues = [self.SpeakerImpedanceValue.text(), self.SpeakerPowerValue.text()]
 
-        ampValues = [ self.AmpImpedanceValue.text(), self.AmpPowerValue.text(), self.SensitivityValue.text(), self.HPFValue.text()]
+        ampValues = [ self.AmpImpedanceValue.text(), self.AmpPowerValue.text(), self.SensitivityValue.text(), self.HPFValue.text(), self.LPFValue.text()]
 
         if self.allNumericValues:
             self.API.protect = float(self.ProtectionCombo.itemText(self.ProtectionCombo.currentIndex()))
 
             if self.HPFValue.text():
                 self.API.setHPF(float(self.HPFValue.text()))
+
+            if self.LPFValue.text():
+                self.API.setLPF(float(self.LPFValue.text()))
 
             if '' not in set(driverValues):
                self.updateDriver(driverValues)
@@ -154,6 +163,7 @@ class LimiterApp(QMainWindow):
         self.API.setAmp(self.amp)
 
     def CalculateLimiters(self):
+        self.StoreParamsButton.setEnabled(True)
         self.API.calculatePeakLimiter()
         self.API.CalculateRMSLimiter()
         self.API.calculateTimeParameters()
@@ -197,64 +207,149 @@ class LimiterApp(QMainWindow):
         """!
         This method open a dialog to load a .pkl file on the GUI.
         """
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
-        driverDB = str(Path(os.getcwd()).parent) + r'\dataBase\amplifierDataBase'
+        if self.ampType == 'Custom':
+            options = QFileDialog.Options()
+            options |= QFileDialog.DontUseNativeDialog
+            driverDB = str(Path(os.getcwd()).parent) + r'\dataBase\amplifierDataBase'
+            self.fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", directory = driverDB,
+                                                           initialFilter = "All Files (*);;amp file (*.json)", options=options)
+            if self.fileName:
 
-        self.fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", directory = driverDB,
-                                                       initialFilter = "All Files (*);;amp file (*.json)", options=options)
-        if self.fileName:
+                with open(self.fileName, 'r') as f:
+                    self.loadAmpButton.setText('Manual input')
+                    self.AmpImpedanceComBoBox.show()
+                    self.OperationMode.show()
 
-            with open(self.fileName, 'r') as f:
-                self.AmpImpedanceComBoBox.show()
-                self.OperationMode.show()
+                    self.AmpData = json.load(f)
+                    self.AmpImpedanceValue.setEnabled(False)
+                    self.AmpImpedanceValue.hide()
+                    self.AmpPowerValue.setEnabled(False)
+                    self.SensitivityValue.setEnabled(False)
+                    self.AmplificationInfoLabel.setText('AmpData Data:  ' + self.AmpData['Brand'] + '-' + self.AmpData['Model'])
 
-                self.AmpData = json.load(f)
-                self.AmpImpedanceValue.setEnabled(False)
-                self.AmpImpedanceValue.hide()
-                self.AmpPowerValue.setEnabled(False)
-                self.SensitivityValue.setEnabled(False)
-                self.AmplificationInfoLabel.setText('AmpData Data:  ' + self.AmpData['Brand'] + '-' + self.AmpData['Model'])
-
-                # show combo box with loaded data
-                impedanceList = [str(impedance) for impedance in self.AmpData[self.OperationMode.currentText()]['Impedance']]
-                self.AmpImpedanceComBoBox.clear()
-                self.AmpImpedanceComBoBox.addItems(impedanceList)
-
-
-            return True
+                    # show combo box with loaded data
+                    impedanceList = [str(impedance) for impedance in self.AmpData[self.OperationMode.currentText()]['Impedance']]
+                    self.AmpImpedanceComBoBox.clear()
+                    self.AmpImpedanceComBoBox.addItems(impedanceList)
+                    self.ampType = 'DataBase'
+                return True
+            else:
+                return False
         else:
-            return False
+            self.AmplificationInfoLabel.setText('Amplifier Characterstics')
+            self.loadAmpButton.setText('Load amplifier')
+            self.AmpImpedanceComBoBox.hide()
+            self.OperationMode.hide()
+            self.AmpImpedanceValue.show()
+            self.AmpPowerValue.setEnabled(True)
+            self.SensitivityValue.setEnabled(True)
+            self.AmpImpedanceValue.setEnabled(True)
+            self.ampType = 'Custom'
+
 
     def openDriverDialog(self):
         """!
         This method open a dialog to load a .pkl file on the GUI.
         """
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
-        driverDB = str(Path(os.getcwd()).parent) + r'\dataBase\driverDataBase'
-        self.fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", directory = driverDB,
-                                                       initialFilter = "All Files (*);;driver file (*.json)", options=options)
-        if self.fileName:
-            with open(self.fileName, 'r') as f:
-                self.DriverData = json.load(f)
-                self.driver.setPower(self.DriverData['Power'])
-                self.SpeakerPowerValue.setText(self.driver.power)
-                self.SpeakerPowerValue.setEnabled(False)
+        if self.driveType =='Custom':
+            options = QFileDialog.Options()
+            options |= QFileDialog.DontUseNativeDialog
+            driverDB = str(Path(os.getcwd()).parent) + r'\dataBase\driverDataBase'
+            self.fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", directory = driverDB,
+                                                           initialFilter = "All Files (*);;driver file (*.json)", options=options)
+            if self.fileName:
+                with open(self.fileName, 'r') as f:
+                    self.loadDriverButton.setText('Manual input')
+                    self.DriverData = json.load(f)
+                    self.driver.setPower(self.DriverData['Power'])
+                    self.SpeakerPowerValue.setText(self.driver.power)
+                    self.SpeakerPowerValue.setEnabled(False)
 
-                self.driver.setImpedance(self.DriverData['Impedance'])
-                self.SpeakerImpedanceValue.setText(self.driver.impedance)
-                self.SpeakerImpedanceValue.setEnabled(False)
+                    self.driver.setImpedance(self.DriverData['Impedance'])
+                    self.SpeakerImpedanceValue.setText(self.driver.impedance)
+                    self.SpeakerImpedanceValue.setEnabled(False)
 
-                self.SpeakerInfoLabel.setText('Driver Data:  ' + self.DriverData['Brand'] + '-' + self.DriverData['Model'])
-            return True
+                    self.SpeakerInfoLabel.setText('Driver Data:  ' + self.DriverData['Brand'] + '-' + self.DriverData['Model'])
+                    self.driveType = 'DataBase'
+                return True
+            else:
+                return False
         else:
-            return False
+            self.SpeakerInfoLabel.setText('Speaker Characteristics')
+            self.SpeakerPowerValue.setEnabled(True)
+            self.SpeakerImpedanceValue.setEnabled(True)
+            self.driveType = 'Custom'
+
 
     def storeParams(self):
+
+        if self.driveType == 'Custom':
+            print('aqui se abre una GUI para rellenar datos')
+        else:
+            self.outputTable.setItem(self.row, 1, QTableWidgetItem(self.AmpData['Brand'] + '-' + self.AmpData['Model']))
+            self.outputTable.setItem(self.row, 2, QTableWidgetItem(self.OperationMode.currentText()))
+
+        #self.outputTable.setItem(self.row, 0, QTableWidgetItem(str(self.row + 1)))
+        #self.outputTable.setItem(self.row, 1, QTableWidgetItem('b'))
+
+
+        self.outputTable.setItem(self.row, 3, QTableWidgetItem(str(self.amp.power)))
+        self.outputTable.setItem(self.row, 4, QTableWidgetItem(str(self.amp.impedance)))
+
+
+
+        self.outputTable.setItem(self.row, 5, QTableWidgetItem(self.DriverData['Brand'] + '-' + self.DriverData['Model']))
+        self.outputTable.setItem(self.row, 6, QTableWidgetItem('e'))
+
+        self.outputTable.setItem(self.row, 7, QTableWidgetItem(str(self.driver.power)))
+        self.outputTable.setItem(self.row, 8, QTableWidgetItem(str(self.driver.impedance)))
+        self.outputTable.setItem(self.row, 9, QTableWidgetItem(str(self.API.HPF)))
+        self.outputTable.setItem(self.row, 10, QTableWidgetItem(str(self.API.LPF)))
+        self.outputTable.setItem(self.row, 11, QTableWidgetItem(str(self.API.attack)))
+        self.outputTable.setItem(self.row, 12, QTableWidgetItem(str(self.API.release)))
+        self.outputTable.setItem(self.row, 13, QTableWidgetItem(str(self.RMSThresholdValue.text()) + self.RMSThresholdUnitCombo.itemText(self.RMSThresholdUnitCombo.currentIndex())))
+        self.outputTable.setItem(self.row, 14, QTableWidgetItem(str(self.PeakThresholdValue.text()) + self.PeakThresholdUnitCombo.itemText(self.PeakThresholdUnitCombo.currentIndex())))
+
+
+
+
+        self.row = self.row + 1
+
         pass
     def resetParams(self):
-        pass
+        self.amp = amplifierBase()
+        self.driver = speakerBase()
+
+        self.SpeakerImpedanceValue.setText(None)
+        self.SpeakerPowerValue.setText(None)
+        self.AmpImpedanceValue.setText(None)
+        self.AmpPowerValue.setText(None)
+        self.SensitivityValue.setText(None)
+        self.RMSThresholdValue.setText(None)
+        self.PeakThresholdValue.setText(None)
+        self.AttackValue.setText(None)
+        self.ReleaseValue.setText(None)
+
+        self.RMSThresholdValue.setText(None)
+        self.PeakThresholdValue.setText(None)
+        self.AttackValue.setText(None)
+        self.ReleaseValue.setText(None)
+        self.HPFValue.setText(None)
+
+        self.SpeakerInfoLabel.setText('')
+        self.SpeakerPowerValue.setEnabled(True)
+        self.SpeakerImpedanceValue.setEnabled(True)
+        self.driveType = 'Custom'
+
+        self.AmplificationInfoLabel.setText('')
+        self.loadAmpButton.setText('Load amplifier')
+        self.AmpImpedanceComBoBox.hide()
+        self.OperationMode.hide()
+        self.AmpImpedanceValue.show()
+        self.AmpPowerValue.setEnabled(True)
+        self.SensitivityValue.setEnabled(True)
+        self.AmpImpedanceValue.setEnabled(True)
+        self.ampType = 'Custom'
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
