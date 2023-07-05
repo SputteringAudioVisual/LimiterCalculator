@@ -1,17 +1,35 @@
-from PyQt5.QtWidgets import QMainWindow, QMessageBox, QCheckBox, QFileDialog, QApplication, QTableWidgetItem
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QCheckBox, QFileDialog, QApplication, QTableWidgetItem, QSplashScreen
 from PyQt5.uic import loadUi
+from PyQt5.QtGui import QPixmap, QFont
 import sys
 import os
+from PyQt5.QtCore import Qt
 from pathlib import Path
 from PyQt5 import QtCore
 from amplifiers.AmplifierBase import amplifierBase
 from Speakers.SpeakerBase import speakerBase
 from src.API.LimiterAPI import LimiterAPI
 import json
+from GUI.resources.splash import SplashWindow
+import time
 
 
 class LimiterApp(QMainWindow):
     def __init__(self):
+
+        imgPath = r'D:\Repositorios\LimiterCalculator\GUI\resources\imageFF.png'
+        backImage = QPixmap(str(imgPath))
+        textFont = QFont()
+        textFont.setFamily('Times')
+        textFont.setPointSize(12)
+
+        self.splash = QSplashScreen(backImage)
+        self.splash.setFont(textFont)
+        self.splash.showMessage('Dont burn your speakers!!!', Qt.AlignCenter | Qt.AlignBottom)
+        self.splash.show()
+        time.sleep(4)
+        self.splash.close()
+
         super(LimiterApp, self).__init__()
         QMainWindow.__init__(self)
         print(os.getcwd())
@@ -282,9 +300,10 @@ class LimiterApp(QMainWindow):
 
 
     def storeParams(self):
-
-        if self.driveType == 'Custom':
-            print('aqui se abre una GUI para rellenar datos')
+        self.outputTable.setRowCount(self.row+1)
+        if self.ampType == 'Custom':
+            self.outputTable.setItem(self.row, 1, QTableWidgetItem(' - '))
+            self.outputTable.setItem(self.row, 2, QTableWidgetItem(' - '))
         else:
             self.outputTable.setItem(self.row, 1, QTableWidgetItem(self.AmpData['Brand'] + '-' + self.AmpData['Model']))
             self.outputTable.setItem(self.row, 2, QTableWidgetItem(self.OperationMode.currentText()))
@@ -297,9 +316,16 @@ class LimiterApp(QMainWindow):
         self.outputTable.setItem(self.row, 4, QTableWidgetItem(str(self.amp.impedance)))
 
 
+        if self.driveType=='Custom':
+            self.outputTable.setItem(self.row, 5,
+                                     QTableWidgetItem(' - '))
+            self.outputTable.setItem(self.row, 6, QTableWidgetItem(' - '))
+        else:
+            self.outputTable.setItem(self.row, 5, QTableWidgetItem(self.DriverData['Brand'] + '-' + self.DriverData['Model']))
+            self.outputTable.setItem(self.row, 6, QTableWidgetItem('TBD'))
 
-        self.outputTable.setItem(self.row, 5, QTableWidgetItem(self.DriverData['Brand'] + '-' + self.DriverData['Model']))
-        self.outputTable.setItem(self.row, 6, QTableWidgetItem('e'))
+
+
 
         self.outputTable.setItem(self.row, 7, QTableWidgetItem(str(self.driver.power)))
         self.outputTable.setItem(self.row, 8, QTableWidgetItem(str(self.driver.impedance)))

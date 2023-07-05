@@ -48,7 +48,7 @@ class ImageWriter(QLabel):
 class SplashWindow(QMainWindow):
 
     ## Initialize the window and set characteristics as size, frameless borders, icons and widgets
-    def __init__(self, resourcesPath=os.getcwd(), iconFile=r'/img.png', splashImFile=r'img.png'):
+    def __init__(self, resourcesPath=os.getcwd(), iconFile=r'/imgageFF.png', splashImFile=r'imgageFF.png'):
         super(SplashWindow, self).__init__()
 
 
