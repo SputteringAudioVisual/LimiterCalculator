@@ -25,7 +25,7 @@ class LimiterApp(QMainWindow):
 
         self.splash = QSplashScreen(backImage)
         self.splash.setFont(textFont)
-        self.splash.showMessage('Dont burn your speakers!!!', Qt.AlignCenter | Qt.AlignBottom)
+        self.splash.showMessage('Dont burn your speakers!!!', Qt.AlignCenter | Qt.AlignBottom, color=Qt.white)
         self.splash.show()
         time.sleep(4)
         self.splash.close()
@@ -33,7 +33,10 @@ class LimiterApp(QMainWindow):
         super(LimiterApp, self).__init__()
         QMainWindow.__init__(self)
         print(os.getcwd())
-        loadUi(Path(os.getcwd()).parent / Path('GUI/MainGUI/MainGUI.ui'), self)
+        try:
+            loadUi(Path(os.getcwd()).parent / Path('GUI/MainGUI/MainGUI.ui'), self)
+        except:
+            loadUi(Path(os.getcwd()) / Path('GUI/MainGUI/MainGUI.ui'), self)
         self.setEnabled(True)
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.show()
