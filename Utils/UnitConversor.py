@@ -13,3 +13,4 @@ class DBConversor:
     def V2DBU(cls, volts):
         return 20*math.log10(volts/cls.dBu_ref)
 
+

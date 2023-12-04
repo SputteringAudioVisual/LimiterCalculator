@@ -50,5 +50,12 @@ class amplifierBase:
         self.Vsensitivity = self.V_RMS/self.Xfactor
 
 
+    def setDbGain(self, dbGain):
+        self.gain = dbGain
+        self.Xfactor =10**(dbGain/20)
+        self.Vsensitivity = self.V_RMS / self.Xfactor
+        self.dBuSensitivity = DBConversor.V2DBU(self.Vsensitivity)
+
+
 
 

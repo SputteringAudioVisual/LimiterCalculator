@@ -15,7 +15,7 @@ import time
 
 
 class LimiterApp(QMainWindow):
-    def __init__(self):
+    def __init__(self, splash = False):
 
         imgPath = r'D:\Repositorios\LimiterCalculator\GUI\resources\imageFF.png'
         backImage = QPixmap(str(imgPath))
@@ -23,12 +23,14 @@ class LimiterApp(QMainWindow):
         textFont.setFamily('Times')
         textFont.setPointSize(12)
 
-        self.splash = QSplashScreen(backImage)
-        self.splash.setFont(textFont)
-        self.splash.showMessage('', Qt.AlignCenter | Qt.AlignBottom, color=Qt.white)
-        self.splash.show()
-        time.sleep(4)
-        self.splash.close()
+
+        if splash:
+            self.splash = QSplashScreen(backImage)
+            self.splash.setFont(textFont)
+            self.splash.showMessage('', Qt.AlignCenter | Qt.AlignBottom, color=Qt.white)
+            self.splash.show()
+            time.sleep(4)
+            self.splash.close()
 
         super(LimiterApp, self).__init__()
         QMainWindow.__init__(self)
@@ -181,6 +183,8 @@ class LimiterApp(QMainWindow):
             self.amp.setDBUSens(float(amp_values[2]))
         if self.SensitivityUnitCombo.itemText(self.SensitivityUnitCombo.currentIndex()) == 'X Factor':
             self.amp.setXfactor(float(amp_values[2]))
+        if self.SensitivityUnitCombo.itemText(self.SensitivityUnitCombo.currentIndex()) == 'DB':
+            self.amp.setDbGain(float(amp_values[2]))
         self.API.setAmp(self.amp)
 
     def CalculateLimiters(self):
