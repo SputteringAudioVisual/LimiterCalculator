@@ -14,7 +14,16 @@ import time
 
 _HERE = Path(__file__).resolve().parent      # .../GUI/MainGui
 _GUI_DIR = _HERE.parent                      # .../GUI
-_ROOT = _GUI_DIR.parent                      # project root
+_ROOT = _GUI_DIR.parent                      # project root (dev) o _MEIPASS (frozen)
+
+
+def _db_root() -> Path:
+    """En frozen, busca dataBase/ junto al .exe primero (editable por el usuario)."""
+    if getattr(sys, 'frozen', False):
+        candidate = Path(sys.executable).parent / 'dataBase'
+        if candidate.exists():
+            return Path(sys.executable).parent
+    return _ROOT
 
 
 class LimiterApp(QMainWindow):
@@ -206,7 +215,7 @@ class LimiterApp(QMainWindow):
         if self.ampType == 'Custom':
             options = QFileDialog.Options()
             options |= QFileDialog.DontUseNativeDialog
-            amp_db = str(_ROOT / 'dataBase' / 'amplifierDataBase')
+            amp_db = str(_db_root() / 'dataBase' / 'amplifierDataBase')
             self.fileName, _ = QFileDialog.getOpenFileName(
                 self, "Load Amplifier", directory=amp_db,
                 filter="Amp file (*.json);;All Files (*)", options=options
@@ -248,7 +257,7 @@ class LimiterApp(QMainWindow):
         if self.driveType == 'Custom':
             options = QFileDialog.Options()
             options |= QFileDialog.DontUseNativeDialog
-            driver_db = str(_ROOT / 'dataBase' / 'driverDataBase')
+            driver_db = str(_db_root() / 'dataBase' / 'driverDataBase')
             self.fileName, _ = QFileDialog.getOpenFileName(
                 self, "Load Speaker", directory=driver_db,
                 filter="Driver file (*.json);;All Files (*)", options=options
