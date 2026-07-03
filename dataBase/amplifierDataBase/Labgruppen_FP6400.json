@@ -1,0 +1,19 @@
+{
+  "Brand": "Lab.gruppen",
+  "Model": "FP 6400",
+  "Stereo": {
+    "Impedance": [2, 4, 8],
+    "Power":     [2200, 1600, 1000],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Bridge": {
+    "Impedance": [4, 8],
+    "Power":     [4400, 3200],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Sensitivity": {
+    "V sens":   0.775,
+    "dBu sens": 0.0,
+    "X Factor": false
+  }
+}

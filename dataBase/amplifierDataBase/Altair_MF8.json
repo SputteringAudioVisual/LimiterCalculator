@@ -1,0 +1,19 @@
+{
+  "Brand": "Altair",
+  "Model": "MF8",
+  "Stereo": {
+    "Impedance": [2, 4, 8],
+    "Power":     [500, 400, 240],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Bridge": {
+    "Impedance": [4, 8],
+    "Power":     [1000, 800],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Sensitivity": {
+    "V sens":   0.775,
+    "dBu sens": 0.0,
+    "X Factor": false
+  }
+}

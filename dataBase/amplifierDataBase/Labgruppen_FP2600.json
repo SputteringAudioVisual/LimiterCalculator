@@ -1,0 +1,19 @@
+{
+  "Brand": "Lab.gruppen",
+  "Model": "FP 2600",
+  "Stereo": {
+    "Impedance": [2, 4, 8],
+    "Power":     [900, 650, 430],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Bridge": {
+    "Impedance": [4, 8],
+    "Power":     [1800, 1300],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Sensitivity": {
+    "V sens":   0.775,
+    "dBu sens": 0.0,
+    "X Factor": false
+  }
+}

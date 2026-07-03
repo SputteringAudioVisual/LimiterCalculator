@@ -1,0 +1,19 @@
+{
+  "Brand": "Altair",
+  "Model": "MF16",
+  "Stereo": {
+    "Impedance": [2, 4, 8],
+    "Power":     [1050, 820, 480],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Bridge": {
+    "Impedance": [4, 8],
+    "Power":     [2100, 1650],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Sensitivity": {
+    "V sens":   0.775,
+    "dBu sens": 0.0,
+    "X Factor": false
+  }
+}

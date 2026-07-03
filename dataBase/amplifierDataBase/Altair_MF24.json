@@ -1,0 +1,19 @@
+{
+  "Brand": "Altair",
+  "Model": "MF24",
+  "Stereo": {
+    "Impedance": [2, 4, 8],
+    "Power":     [1500, 1190, 720],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Bridge": {
+    "Impedance": [4, 8],
+    "Power":     [3200, 2300],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Sensitivity": {
+    "V sens":   0.775,
+    "dBu sens": 0.0,
+    "X Factor": false
+  }
+}
