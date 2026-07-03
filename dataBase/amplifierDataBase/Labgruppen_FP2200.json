@@ -1,44 +1,24 @@
 {
   "Brand": "Lab.gruppen",
-  "Model": "FP 3400",
+  "Model": "FP 2200",
   "Stereo MLS 0dB": {
     "Impedance": [2, 4, 8],
-    "Power":     [1700, 1500, 1100],
+    "Power":     [1100, 650, 350],
     "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
   },
-  "Stereo MLS -2dB": {
+  "Stereo MLS -3dB": {
     "Impedance": [2, 4, 8],
-    "Power":     [1550, 1300, 700],
-    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
-  },
-  "Stereo MLS -4dB": {
-    "Impedance": [2, 4, 8],
-    "Power":     [1400, 750, 400],
-    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
-  },
-  "Stereo MLS -5dB": {
-    "Impedance": [2, 4, 8],
-    "Power":     [1200, 600, 300],
+    "Power":     [800, 330, 200],
     "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
   },
   "Bridge MLS 0dB": {
     "Impedance": [4, 8],
-    "Power":     [3100, 3000],
+    "Power":     [2200, 1300],
     "OutConections": [" 1+ / · ", " · / 1- "]
   },
-  "Bridge MLS -2dB": {
+  "Bridge MLS -3dB": {
     "Impedance": [4, 8],
-    "Power":     [3100, 2600],
-    "OutConections": [" 1+ / · ", " · / 1- "]
-  },
-  "Bridge MLS -4dB": {
-    "Impedance": [4, 8],
-    "Power":     [2800, 1500],
-    "OutConections": [" 1+ / · ", " · / 1- "]
-  },
-  "Bridge MLS -5dB": {
-    "Impedance": [4, 8],
-    "Power":     [2400, 1200],
+    "Power":     [1600, 670],
     "OutConections": [" 1+ / · ", " · / 1- "]
   },
   "Sensitivity": [

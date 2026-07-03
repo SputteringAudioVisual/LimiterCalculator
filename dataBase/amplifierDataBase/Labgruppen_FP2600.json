@@ -1,14 +1,24 @@
 {
   "Brand": "Lab.gruppen",
   "Model": "FP 2600",
-  "Stereo": {
+  "Stereo MLS 0dB": {
     "Impedance": [2, 4, 8],
-    "Power":     [900, 650, 430],
+    "Power":     [1200, 840, 430],
     "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
   },
-  "Bridge": {
+  "Stereo MLS -3dB": {
+    "Impedance": [2, 4, 8],
+    "Power":     [870, 430, 240],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Bridge MLS 0dB": {
     "Impedance": [4, 8],
-    "Power":     [1800, 1300],
+    "Power":     [2400, 1680],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Bridge MLS -3dB": {
+    "Impedance": [4, 8],
+    "Power":     [1740, 870],
     "OutConections": [" 1+ / · ", " · / 1- "]
   },
   "Sensitivity": [
