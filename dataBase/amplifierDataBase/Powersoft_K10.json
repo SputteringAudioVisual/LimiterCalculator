@@ -1,0 +1,19 @@
+{
+  "Brand": "Powersoft",
+  "Model": "K10",
+  "Stereo": {
+    "Impedance": [2, 4, 8],
+    "Power":     [3000, 2500, 1500],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Bridge": {
+    "Impedance": [4, 8],
+    "Power":     [6000, 5000],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Sensitivity": {
+    "V sens":   0.775,
+    "dBu sens": 0.0,
+    "X Factor": false
+  }
+}

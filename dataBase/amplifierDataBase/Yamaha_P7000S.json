@@ -1,0 +1,19 @@
+{
+  "Brand": "Yamaha",
+  "Model": "P7000S",
+  "Stereo": {
+    "Impedance": [4, 8],
+    "Power":     [3500, 2100],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Bridge": {
+    "Impedance": [8],
+    "Power":     [7000],
+    "OutConections": [" 1+ / · "]
+  },
+  "Sensitivity": {
+    "V sens":   1.23,
+    "dBu sens": 4.01,
+    "X Factor": false
+  }
+}
