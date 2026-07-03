@@ -19,6 +19,12 @@ _ROOT = _GUI_DIR.parent                      # project root
 # Items shown in SensitivityUnitCombo when in manual (Custom) mode
 _SENS_UNITS_DEFAULT = ['V sens', 'dBu sens', 'X Factor', 'DB']
 
+# JSON top-level keys that are NOT operating modes
+_AMP_META_KEYS = {'Brand', 'Model', 'Sensitivity'}
+
+# Default OperationMode items when in Custom (manual) mode
+_OP_MODES_DEFAULT = ['Stereo', 'Bridge']
+
 
 def _db_root() -> Path:
     """En frozen, busca dataBase/ junto al .exe primero (editable por el usuario)."""
@@ -284,11 +290,18 @@ class LimiterApp(QMainWindow):
                 self.SensitivityUnitCombo.addItem(opt['label'])
             self.SensitivityUnitCombo.blockSignals(False)
 
-            # Pre-select first option
+            # Pre-select first sensitivity option
             if self.SensitivityOptions:
                 first = self.SensitivityOptions[0]
                 self.currentSensUnit = first['unit']
                 self.SensitivityValue.setText(str(first['value']))
+
+            # Populate OperationMode dynamically from JSON keys
+            modes = [k for k in self.AmpData if k not in _AMP_META_KEYS]
+            self.OperationMode.blockSignals(True)
+            self.OperationMode.clear()
+            self.OperationMode.addItems(modes)
+            self.OperationMode.blockSignals(False)
 
             self.loadAmpButton.setText('Manual input')
             self.AmpImpedanceComBoBox.show()
@@ -300,7 +313,7 @@ class LimiterApp(QMainWindow):
             self.AmplificationInfoLabel.setText(
                 'AmpData Data:  ' + self.AmpData['Brand'] + '-' + self.AmpData['Model']
             )
-            impedanceList = [str(z) for z in self.AmpData[self.OperationMode.currentText()]['Impedance']]
+            impedanceList = [str(z) for z in self.AmpData[modes[0]]['Impedance']]
             self.AmpImpedanceComBoBox.clear()
             self.AmpImpedanceComBoBox.addItems(impedanceList)
             self.ampType = 'DataBase'
@@ -426,6 +439,12 @@ class LimiterApp(QMainWindow):
         self.SensitivityUnitCombo.clear()
         self.SensitivityUnitCombo.addItems(_SENS_UNITS_DEFAULT)
         self.SensitivityUnitCombo.blockSignals(False)
+
+        # Restore default operation mode items
+        self.OperationMode.blockSignals(True)
+        self.OperationMode.clear()
+        self.OperationMode.addItems(_OP_MODES_DEFAULT)
+        self.OperationMode.blockSignals(False)
 
         self.RMSThresholdValue.setEnabled(False)
         self.PeakThresholdValue.setEnabled(False)

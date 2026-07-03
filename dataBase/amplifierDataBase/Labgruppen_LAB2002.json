@@ -1,14 +1,44 @@
 {
   "Brand": "Lab.gruppen",
   "Model": "LAB 2002",
-  "Stereo": {
+  "Stereo MLS 0dB": {
     "Impedance": [2, 4, 8],
     "Power":     [1400, 1400, 1100],
     "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
   },
-  "Bridge": {
+  "Stereo MLS -2dB": {
+    "Impedance": [2, 4, 8],
+    "Power":     [1200, 1400, 1100],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Stereo MLS -4dB": {
+    "Impedance": [2, 4, 8],
+    "Power":     [1000, 1200, 1100],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Stereo MLS -5dB": {
+    "Impedance": [2, 4, 8],
+    "Power":     [900, 1000, 1000],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Bridge MLS 0dB": {
     "Impedance": [4, 8],
     "Power":     [2800, 2800],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Bridge MLS -2dB": {
+    "Impedance": [4, 8],
+    "Power":     [2400, 2200],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Bridge MLS -4dB": {
+    "Impedance": [4, 8],
+    "Power":     [2400, 1400],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Bridge MLS -5dB": {
+    "Impedance": [4, 8],
+    "Power":     [2100, 1200],
     "OutConections": [" 1+ / · ", " · / 1- "]
   },
   "Sensitivity": [
