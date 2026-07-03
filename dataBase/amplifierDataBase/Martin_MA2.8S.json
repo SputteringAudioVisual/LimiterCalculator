@@ -11,9 +11,7 @@
     "Power":     [2800],
     "OutConections": [" 1+ / · "]
   },
-  "Sensitivity": {
-    "V sens":   0.775,
-    "dBu sens": 0.0,
-    "X Factor": false
-  }
+  "Sensitivity": [
+    {"label": "0 dBu  (0.775 V)", "unit": "dBu sens", "value": 0.0}
+  ]
 }

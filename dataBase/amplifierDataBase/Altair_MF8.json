@@ -11,9 +11,8 @@
     "Power":     [1000, 800],
     "OutConections": [" 1+ / · ", " · / 1- "]
   },
-  "Sensitivity": {
-    "V sens":   0.775,
-    "dBu sens": 0.0,
-    "X Factor": false
-  }
+  "Sensitivity": [
+    {"label": "Jumper abierto   — 0 dBu  (0.775 V)  [alta ganancia]",  "unit": "dBu sens", "value": 0.0},
+    {"label": "Jumper cerrado   — +8 dBu  (1.95 V)  [baja ganancia]",  "unit": "dBu sens", "value": 8.0}
+  ]
 }

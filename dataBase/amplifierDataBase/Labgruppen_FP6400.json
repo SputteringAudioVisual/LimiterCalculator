@@ -11,9 +11,14 @@
     "Power":     [4400, 3200],
     "OutConections": [" 1+ / · ", " · / 1- "]
   },
-  "Sensitivity": {
-    "V sens":   0.775,
-    "dBu sens": 0.0,
-    "X Factor": false
-  }
+  "Sensitivity": [
+    {"label": "Pos. 8 — 41 dB  [mayor ganancia]",  "unit": "DB", "value": 41},
+    {"label": "Pos. 7 — 38 dB",                    "unit": "DB", "value": 38},
+    {"label": "Pos. 6 — 35 dB",                    "unit": "DB", "value": 35},
+    {"label": "Pos. 5 — 32 dB",                    "unit": "DB", "value": 32},
+    {"label": "Pos. 4 — 29 dB",                    "unit": "DB", "value": 29},
+    {"label": "Pos. 3 — 26 dB",                    "unit": "DB", "value": 26},
+    {"label": "Pos. 2 — 23 dB",                    "unit": "DB", "value": 23},
+    {"label": "Pos. 1 — 20 dB  [menor ganancia]",  "unit": "DB", "value": 20}
+  ]
 }

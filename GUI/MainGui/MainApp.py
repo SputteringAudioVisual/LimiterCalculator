@@ -14,7 +14,10 @@ import time
 
 _HERE = Path(__file__).resolve().parent      # .../GUI/MainGui
 _GUI_DIR = _HERE.parent                      # .../GUI
-_ROOT = _GUI_DIR.parent                      # project root (dev) o _MEIPASS (frozen)
+_ROOT = _GUI_DIR.parent                      # project root
+
+# Items shown in SensitivityUnitCombo when in manual (Custom) mode
+_SENS_UNITS_DEFAULT = ['V sens', 'dBu sens', 'X Factor', 'DB']
 
 
 def _db_root() -> Path:
@@ -77,12 +80,16 @@ class LimiterApp(QMainWindow):
         self.OperationMode.hide()
         self.AmpImpedanceComBoBox.hide()
 
+        # Sensitivity state — unit is tracked separately from combo text (DB mode)
+        self.currentSensUnit = 'V sens'
+        self.SensitivityOptions = []   # list of {label, unit, value} when amp loaded from JSON
+
         # Combo signals
         self.ProtectionCombo.currentIndexChanged.connect(self._recalculate)
         self.RMSThresholdUnitCombo.currentIndexChanged.connect(self._recalculate)
         self.PeakThresholdUnitCombo.currentIndexChanged.connect(self._recalculate)
         self.AmpImpedanceComBoBox.currentIndexChanged.connect(self._recalculate)
-        self.SensitivityUnitCombo.currentIndexChanged.connect(self._recalculate)
+        self.SensitivityUnitCombo.currentIndexChanged.connect(self._on_sensitivity_combo_changed)
         self.OperationMode.currentIndexChanged.connect(self.changeAmpConfiguration)
 
         # Text field signals — editingFinished fires on Enter or focus-out
@@ -106,15 +113,52 @@ class LimiterApp(QMainWindow):
         self.allNumericValues = False
         self.row = 0
 
+    # ------------------------------------------------------------------
+    # Sensitivity helpers
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _load_sensitivity_options(sens_data):
+        """Convert JSON Sensitivity field to list of {label, unit, value}.
+
+        Accepts both the new list format and the old dict format for
+        backward compatibility with hand-edited JSON files.
+        """
+        if isinstance(sens_data, list):
+            return sens_data
+        # Old dict format: {"V sens": 0.775, "dBu sens": 0.0, "X Factor": false}
+        options = []
+        for unit, value in sens_data.items():
+            if value is not False:
+                options.append({"label": f"{unit}: {value}", "unit": unit, "value": value})
+        return options
+
+    def _on_sensitivity_combo_changed(self):
+        """Handle SensitivityUnitCombo change.
+
+        In DataBase mode the combo items ARE the sensitivity presets from
+        the JSON, so selecting one also updates the value field and the
+        tracked unit type.  In Custom mode the combo just selects the unit.
+        """
+        if self.ampType == 'DataBase' and self.SensitivityOptions:
+            idx = self.SensitivityUnitCombo.currentIndex()
+            if 0 <= idx < len(self.SensitivityOptions):
+                opt = self.SensitivityOptions[idx]
+                self.currentSensUnit = opt['unit']
+                self.SensitivityValue.setText(str(opt['value']))
+        self._recalculate()
+
+    # ------------------------------------------------------------------
+    # Core recalculation
+    # ------------------------------------------------------------------
+
     def _recalculate(self, *args):
         if not self.AmpImpedanceComBoBox.isHidden():
             self.AmpImpedanceValue.setText(self.AmpImpedanceComBoBox.currentText())
             self.AmpPowerValue.setText(
                 str(self.AmpData[self.OperationMode.currentText()]['Power'][self.AmpImpedanceComBoBox.currentIndex()])
             )
-            sens_key = self.SensitivityUnitCombo.currentText()
-            if self.AmpData['Sensitivity'].get(sens_key) is not False:
-                self.SensitivityValue.setText(str(self.AmpData['Sensitivity'][sens_key]))
+            # Sensitivity value is set by _on_sensitivity_combo_changed; don't overwrite it here.
 
         required = [
             self.SpeakerImpedanceValue.text(), self.SpeakerPowerValue.text(),
@@ -123,7 +167,6 @@ class LimiterApp(QMainWindow):
         ]
         self.ValueList = required + [self.LPFValue.text()]
 
-        # Return silently if any required field is still empty
         if '' in required:
             return
 
@@ -160,7 +203,10 @@ class LimiterApp(QMainWindow):
         self.amp.setPower(float(amp_values[1]))
         self.amp.CalculateRMSPeakValues()
 
-        unit = self.SensitivityUnitCombo.currentText()
+        # In DataBase mode the unit comes from the selected JSON option, not from
+        # the combo text (which now shows a human-readable label, not a unit key).
+        unit = self.currentSensUnit if self.ampType == 'DataBase' else self.SensitivityUnitCombo.currentText()
+
         if unit == 'V sens':
             self.amp.setVsens(float(amp_values[2]))
         elif unit == 'dBu sens':
@@ -211,6 +257,10 @@ class LimiterApp(QMainWindow):
         self.AttackValue.setReadOnly(True)
         self.ReleaseValue.setReadOnly(True)
 
+    # ------------------------------------------------------------------
+    # Dialog / load actions
+    # ------------------------------------------------------------------
+
     def openAmpDialog(self):
         if self.ampType == 'Custom':
             options = QFileDialog.Options()
@@ -225,6 +275,20 @@ class LimiterApp(QMainWindow):
 
             with open(self.fileName, 'r') as f:
                 self.AmpData = json.load(f)
+
+            # Build sensitivity options and populate combo
+            self.SensitivityOptions = self._load_sensitivity_options(self.AmpData['Sensitivity'])
+            self.SensitivityUnitCombo.blockSignals(True)
+            self.SensitivityUnitCombo.clear()
+            for opt in self.SensitivityOptions:
+                self.SensitivityUnitCombo.addItem(opt['label'])
+            self.SensitivityUnitCombo.blockSignals(False)
+
+            # Pre-select first option
+            if self.SensitivityOptions:
+                first = self.SensitivityOptions[0]
+                self.currentSensUnit = first['unit']
+                self.SensitivityValue.setText(str(first['value']))
 
             self.loadAmpButton.setText('Manual input')
             self.AmpImpedanceComBoBox.show()
@@ -354,6 +418,14 @@ class LimiterApp(QMainWindow):
         self.SensitivityValue.setEnabled(True)
         self.AmpImpedanceValue.setEnabled(True)
         self.ampType = 'Custom'
+
+        # Restore default sensitivity combo items and state
+        self.SensitivityOptions = []
+        self.currentSensUnit = 'V sens'
+        self.SensitivityUnitCombo.blockSignals(True)
+        self.SensitivityUnitCombo.clear()
+        self.SensitivityUnitCombo.addItems(_SENS_UNITS_DEFAULT)
+        self.SensitivityUnitCombo.blockSignals(False)
 
         self.RMSThresholdValue.setEnabled(False)
         self.PeakThresholdValue.setEnabled(False)
