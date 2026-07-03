@@ -1,14 +1,44 @@
 {
   "Brand": "Lab.gruppen",
   "Model": "FP 6400",
-  "Stereo": {
+  "Stereo MLS 0dB": {
     "Impedance": [2, 4, 8],
-    "Power":     [2200, 1600, 1000],
+    "Power":     [2900, 2300, 1300],
     "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
   },
-  "Bridge": {
+  "Stereo MLS -2dB": {
+    "Impedance": [2, 4, 8],
+    "Power":     [2400, 1600, 820],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Stereo MLS -4dB": {
+    "Impedance": [2, 4, 8],
+    "Power":     [2000, 1000, 520],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Stereo MLS -5dB": {
+    "Impedance": [2, 4, 8],
+    "Power":     [1660, 830, 430],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Bridge MLS 0dB": {
     "Impedance": [4, 8],
-    "Power":     [4400, 3200],
+    "Power":     [5800, 4600],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Bridge MLS -2dB": {
+    "Impedance": [4, 8],
+    "Power":     [4800, 3200],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Bridge MLS -4dB": {
+    "Impedance": [4, 8],
+    "Power":     [4000, 2000],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Bridge MLS -5dB": {
+    "Impedance": [4, 8],
+    "Power":     [3320, 1660],
     "OutConections": [" 1+ / · ", " · / 1- "]
   },
   "Sensitivity": [
