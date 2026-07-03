@@ -1,0 +1,17 @@
+{
+  "Brand": "Tamp",
+  "Model": "TSA4000",
+  "Stereo": {
+    "impedance": [2,4,8],
+    "Power": [500, 1000, 2000],
+    "OutConections":[" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Bridge": {
+    "impedance": [],
+    "Power": [],
+    "OutConections":[]
+  },
+  "VSens": "1",
+  "dbuSens": "2",
+  "Xfactor": "3"
+}
