@@ -1,0 +1,17 @@
+{
+  "Brand": "Crown",
+  "Model": "Macrotech 2402",
+  "Stereo": {
+    "Impedance": [2, 4, 8],
+    "Power":     [1700, 1200, 600],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Bridge": {
+    "Impedance": [4, 8],
+    "Power":     [3400, 2400],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Sensitivity": [
+    {"label": "+5.1 dBu  (1.4 V)", "unit": "dBu sens", "value": 5.14}
+  ]
+}
