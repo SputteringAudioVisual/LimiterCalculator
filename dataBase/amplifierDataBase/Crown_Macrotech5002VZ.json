@@ -1,0 +1,17 @@
+{
+  "Brand": "Crown",
+  "Model": "Macrotech 5002VZ",
+  "Stereo": {
+    "Impedance": [2, 4, 8],
+    "Power":     [2500, 1700, 1000],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Bridge": {
+    "Impedance": [4, 8],
+    "Power":     [5000, 3500],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Sensitivity": [
+    {"label": "+5.1 dBu  (1.4 V)", "unit": "dBu sens", "value": 5.14}
+  ]
+}

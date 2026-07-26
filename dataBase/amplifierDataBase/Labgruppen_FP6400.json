@@ -1,0 +1,54 @@
+{
+  "Brand": "Lab.gruppen",
+  "Model": "FP 6400",
+  "Stereo MLS 0dB": {
+    "Impedance": [2, 4, 8],
+    "Power":     [2900, 2300, 1300],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Stereo MLS -2dB": {
+    "Impedance": [2, 4, 8],
+    "Power":     [2400, 1600, 820],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Stereo MLS -4dB": {
+    "Impedance": [2, 4, 8],
+    "Power":     [2000, 1000, 520],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Stereo MLS -5dB": {
+    "Impedance": [2, 4, 8],
+    "Power":     [1660, 830, 430],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Bridge MLS 0dB": {
+    "Impedance": [4, 8],
+    "Power":     [5800, 4600],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Bridge MLS -2dB": {
+    "Impedance": [4, 8],
+    "Power":     [4800, 3200],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Bridge MLS -4dB": {
+    "Impedance": [4, 8],
+    "Power":     [4000, 2000],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Bridge MLS -5dB": {
+    "Impedance": [4, 8],
+    "Power":     [3320, 1660],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Sensitivity": [
+    {"label": "Pos. 8 — 41 dB  [mayor ganancia]",  "unit": "DB", "value": 41},
+    {"label": "Pos. 7 — 38 dB",                    "unit": "DB", "value": 38},
+    {"label": "Pos. 6 — 35 dB",                    "unit": "DB", "value": 35},
+    {"label": "Pos. 5 — 32 dB",                    "unit": "DB", "value": 32},
+    {"label": "Pos. 4 — 29 dB",                    "unit": "DB", "value": 29},
+    {"label": "Pos. 3 — 26 dB",                    "unit": "DB", "value": 26},
+    {"label": "Pos. 2 — 23 dB",                    "unit": "DB", "value": 23},
+    {"label": "Pos. 1 — 20 dB  [menor ganancia]",  "unit": "DB", "value": 20}
+  ]
+}

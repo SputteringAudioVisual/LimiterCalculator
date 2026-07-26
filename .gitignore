@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+.pyinstaller-cache/
+.pyinstaller-work/
+
+# PyInstaller
+*.spec.bak
+
+# Environments
+.venv/
+venv/
+env/
+.env
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# PyCharm
+*.iws
+out/
+
+# OS
+.DS_Store
+Thumbs.db

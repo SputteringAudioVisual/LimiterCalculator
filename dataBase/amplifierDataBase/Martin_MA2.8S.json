@@ -1,0 +1,17 @@
+{
+  "Brand": "Martin Audio",
+  "Model": "MA 2.8S",
+  "Stereo": {
+    "Impedance": [4, 8],
+    "Power":     [1400, 800],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Bridge": {
+    "Impedance": [8],
+    "Power":     [2800],
+    "OutConections": [" 1+ / · "]
+  },
+  "Sensitivity": [
+    {"label": "0 dBu  (0.775 V)", "unit": "dBu sens", "value": 0.0}
+  ]
+}

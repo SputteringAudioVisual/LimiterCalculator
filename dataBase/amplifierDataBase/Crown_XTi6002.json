@@ -1,0 +1,17 @@
+{
+  "Brand": "Crown",
+  "Model": "XTi 6002",
+  "Stereo": {
+    "Impedance": [2, 4, 8],
+    "Power":     [2800, 2100, 1200],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Bridge": {
+    "Impedance": [4, 8],
+    "Power":     [5600, 4200],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Sensitivity": [
+    {"label": "+5.1 dBu  (1.4 V)  — fabrica/default", "unit": "dBu sens", "value": 5.14}
+  ]
+}

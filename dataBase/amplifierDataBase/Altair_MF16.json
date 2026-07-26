@@ -1,0 +1,18 @@
+{
+  "Brand": "Altair",
+  "Model": "MF16",
+  "Stereo": {
+    "Impedance": [2, 4, 8],
+    "Power":     [1050, 820, 480],
+    "OutConections": [" 1+ / 1- ", " 1+ / 1- "]
+  },
+  "Bridge": {
+    "Impedance": [4, 8],
+    "Power":     [2100, 1650],
+    "OutConections": [" 1+ / · ", " · / 1- "]
+  },
+  "Sensitivity": [
+    {"label": "Jumper abierto   — 0 dBu  (0.775 V)  [alta ganancia]",  "unit": "dBu sens", "value": 0.0},
+    {"label": "Jumper cerrado   — +8 dBu  (1.95 V)  [baja ganancia]",  "unit": "dBu sens", "value": 8.0}
+  ]
+}
