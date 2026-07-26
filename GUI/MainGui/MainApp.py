@@ -455,8 +455,8 @@ class LimiterApp(QMainWindow):
 
 if __name__ == "__main__":
     from PyQt5.QtWidgets import QApplication
-    import qdarktheme
+    import qdarkstyle
     app = QApplication(sys.argv)
-    qdarktheme.setup_theme()
+    app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
     window = LimiterApp()
     app.exec_()

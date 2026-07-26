@@ -34,7 +34,7 @@ a = Analysis(
         'PyQt5.uic',
         'PyQt5.uic.properties',
         'PyQt5.uic.uiparser',
-        'qdarktheme',
+        'qdarkstyle',
     ],
     hookspath=[],
     hooksconfig={},

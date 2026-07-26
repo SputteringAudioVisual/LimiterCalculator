@@ -5,12 +5,12 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from PyQt5.QtWidgets import QApplication
-import qdarktheme
+import qdarkstyle
 from GUI.MainGui.MainApp import LimiterApp
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    qdarktheme.setup_theme()
+    app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
     window = LimiterApp(splash=False)
     app.exec_()
