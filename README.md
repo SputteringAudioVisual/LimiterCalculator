@@ -6,6 +6,18 @@ transductor y el procesador.
 
 ![Limiter Calculator](GUI/resources/imageFF.png)
 
+## Descargar para Windows
+
+Si solo necesitas utilizar la aplicación, descarga el paquete portátil desde:
+
+**[Descargar la última versión para Windows](https://github.com/SputteringAudioVisual/LimiterCalculator/releases/latest/download/LimiterCalculator-Windows.zip)**
+
+También puedes consultar todas las versiones y descargar únicamente el
+ejecutable desde la página de
+[Releases](https://github.com/SputteringAudioVisual/LimiterCalculator/releases).
+El ZIP incluye `LimiterCalculator.exe` y la base de datos editable; no necesita
+Python ni acceso al código fuente.
+
 ## Funciones actuales
 
 - Cálculo de umbrales RMS y pico en dBu.
@@ -76,6 +88,22 @@ pyinstaller "Build files/main.spec"
 
 El resultado se genera en `dist/`. La carpeta `dataBase/` se copia junto al
 ejecutable para que pueda ampliarse sin recompilar.
+
+## Publicar una versión
+
+Las versiones descargables se generan automáticamente en GitHub:
+
+```powershell
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+Al publicar una etiqueta cuyo nombre empiece por `v`, GitHub ejecuta las
+pruebas, compila el ejecutable en Windows y crea una Release con:
+
+- `LimiterCalculator.exe`;
+- `LimiterCalculator-Windows.zip`, con el ejecutable y las bases de datos;
+- `SHA256SUMS.txt`, para comprobar la integridad de la descarga.
 
 ## Estructura
 
